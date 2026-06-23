@@ -1,0 +1,188 @@
+/* 预设方案卡片 */
+.preset-card {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+.preset-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+.preset-card.active {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+.preset-preview {
+  height: 64px;
+}
+.preset-name {
+  padding: 8px 12px;
+  font-size: 13px;
+  text-align: center;
+  background: #fff;
+}
+.preset-tag {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+/* 颜色编辑项 */
+.color-item {
+  padding: 8px 0;
+}
+.color-item-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #666;
+}
+.color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* 原生取色器，隐藏外观只保留功能 */
+.native-color-picker {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+}
+.native-color-picker::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+.native-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+/* 手机预览 */
+.phone-preview {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 3px solid #1a1a2e;
+}
+
+.phone-navbar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.phone-body {
+  min-height: 240px;
+  padding: 10px;
+}
+
+.phone-search {
+  padding: 8px;
+  border-bottom: 1px solid;
+}
+
+.phone-search-bar {
+  height: 32px;
+  border-radius: 16px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.phone-dish-card {
+  display: flex;
+  margin: 8px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid;
+}
+
+.phone-dish-img {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.phone-dish-info {
+  padding: 8px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.phone-dish-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.phone-dish-desc {
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.phone-dish-price {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.phone-add-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.phone-tabbar {
+  height: 50px;
+  display: flex;
+  border-top: 1px solid;
+}
+
+.phone-tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  gap: 2px;
+}
+
+.phone-tab-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  opacity: 0.4;
+}

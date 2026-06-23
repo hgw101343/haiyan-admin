@@ -20,8 +20,10 @@ import {
   MenuUnfoldOutlined,
   LogoutOutlined,
   SettingOutlined,
+  BgColorsOutlined,
 } from "@ant-design/icons";
 import { useAuthStore } from "../store/auth";
+import { useThemeStore } from "../store/theme";
 
 const { Header, Sider, Content, Footer } = AntLayout;
 const { Text } = Typography;
@@ -32,6 +34,7 @@ const menuItems = [
   { key: "/categories", icon: <AppstoreOutlined />, label: "分类管理" },
   { key: "/orders", icon: <OrderedListOutlined />, label: "订单管理" },
   { key: "/users", icon: <UserOutlined />, label: "用户管理" },
+  { key: "/theme", icon: <BgColorsOutlined />, label: "主题设置" },
 ];
 
 export default function Layout() {
@@ -42,6 +45,7 @@ export default function Layout() {
     token: { colorBgContainer },
   } = theme.useToken();
   const { adminInfo, logout } = useAuthStore();
+  const { theme: appTheme } = useThemeStore();
 
   const handleMenuClick = ({ key }: { key: string }) => navigate(key);
 
@@ -70,7 +74,7 @@ export default function Layout() {
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{ background: "#1a1a2e" }}
+        style={{ background: appTheme.navBarBgColor === '#1a1a2e' ? '#1a1a2e' : '#1a1a2e' }}
         width={220}
       >
         <div
@@ -112,7 +116,7 @@ export default function Layout() {
             </Text>
             <Dropdown menu={userMenu} placement="bottomRight">
               <Avatar
-                style={{ background: "#ff6b35", cursor: "pointer" }}
+                style={{ background: appTheme.primaryColor, cursor: "pointer" }}
                 icon={<UserOutlined />}
               />
             </Dropdown>

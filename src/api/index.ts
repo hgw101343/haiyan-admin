@@ -42,7 +42,7 @@ export const getSalesChart = (days = 7) =>
 export const getCategories = () => request.get('/categories')
 export const createCategory = (data: { name: string; sort?: number }) =>
   request.post('/categories', data)
-export const updateCategory = (id: number, data: { name?: string; sort?: number }) =>
+export const updateCategory = (id: number, data: { name?: string; sort?: number; isRecommended?: boolean }) =>
   request.put(`/categories/${id}`, data)
 export const deleteCategory = (id: number) => request.delete(`/categories/${id}`)
 export const batchDeleteCategories = (ids: number[]) =>
@@ -89,3 +89,28 @@ export const uploadImage = (file: File) => {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 }
+
+// ===== 主题 =====
+export interface ThemeConfig {
+  primaryColor: string
+  primaryLight: string
+  primaryDark: string
+  backgroundColor: string
+  cardColor: string
+  textColor: string
+  textSecondary: string
+  navBarBgColor: string
+  navBarTextStyle: 'white' | 'black'
+  tabBarSelectedColor: string
+  tabBarColor: string
+  tabBarBgColor: string
+  borderColor: string
+  successColor: string
+  warningColor: string
+  errorColor: string
+}
+
+export const getTheme = () => request.get<any, { success: boolean; data: ThemeConfig }>('/theme')
+export const updateTheme = (theme: Partial<ThemeConfig>) =>
+  request.put<any, { success: boolean; data: ThemeConfig }>('/theme', theme)
+export const resetTheme = () => request.post<any, { success: boolean; data: ThemeConfig }>('/theme/reset')

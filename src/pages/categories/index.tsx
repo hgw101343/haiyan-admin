@@ -12,6 +12,8 @@ import {
   message,
   Row,
   Col,
+  Switch,
+  Tooltip,
 } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { getCategories, createCategory, updateCategory, deleteCategory, batchDeleteCategories } from '../../api'
@@ -47,7 +49,7 @@ export default function CategoriesPage() {
 
   const openEdit = (r: any) => {
     setEditRecord(r)
-    form.setFieldsValue({ name: r.name, sort: r.sort })
+    form.setFieldsValue({ name: r.name, sort: r.sort, isRecommended: r.isRecommended })
     setModalOpen(true)
   }
 
@@ -75,6 +77,12 @@ export default function CategoriesPage() {
     fetch()
   }
 
+  const handleRecommendToggle = async (id: number, checked: boolean) => {
+    await updateCategory(id, { isRecommended: checked })
+    message.success(checked ? '已设为推荐分类' : '已取消推荐')
+    fetch()
+  }
+
   const handleBatchDelete = () => {
     Modal.confirm({
       title: '确认批量删除？',
@@ -95,6 +103,21 @@ export default function CategoriesPage() {
     { title: 'ID', dataIndex: 'id', width: 80 },
     { title: '分类名称', dataIndex: 'name' },
     { title: '排序', dataIndex: 'sort', width: 100 },
+    {
+      title: '推荐',
+      dataIndex: 'isRecommended',
+      width: 80,
+      render: (v: boolean, r: any) => (
+        <Tooltip title={v ? '已设为推荐' : '设为推荐'}>
+          <Switch
+            checked={v}
+            checkedChildren="推"
+            unCheckedChildren="—"
+            onChange={(checked) => handleRecommendToggle(r.id, checked)}
+          />
+        </Tooltip>
+      ),
+    },
     {
       title: '菜品数',
       dataIndex: '_count',
@@ -168,6 +191,9 @@ export default function CategoriesPage() {
           </Form.Item>
           <Form.Item name="sort" label="排序（数字越小越靠前）">
             <InputNumber min={0} style={{ width: '100%' }} />
+          </Form.Item>
+          <Form.Item name="isRecommended" label="设为推荐分类" valuePropName="checked">
+            <Switch checkedChildren="是" unCheckedChildren="否" />
           </Form.Item>
         </Form>
       </Modal>

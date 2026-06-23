@@ -6,6 +6,7 @@ import DishesPage from './pages/dishes/index'
 import CategoriesPage from './pages/categories/index'
 import OrdersPage from './pages/orders/index'
 import UsersPage from './pages/users/index'
+import ThemePage from './pages/theme/index'
 import { useAuthStore } from './store/auth'
 
 function RequireAuth({ children }: { children: JSX.Element }) {
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="categories" element={<CategoriesPage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="theme" element={<ThemePage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
