@@ -15,6 +15,7 @@ import {
 } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import { getOrders, getOrderDetail, updateOrderStatus } from "../../api";
+import { useAuthStore } from "../../store/auth";
 import dayjs from "dayjs";
 
 const { Title, Text } = Typography;
@@ -36,6 +37,9 @@ const nextStatusMap: Record<string, { next: string; label: string }> = {
 };
 
 export default function OrdersPage() {
+  const { userInfo } = useAuthStore();
+  const isAdmin = userInfo?.role === "ADMIN";
+
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -53,6 +57,7 @@ export default function OrdersPage() {
         pageSize: 20,
         status: statusFilter,
         keyword,
+        // 非管理员后端自动只看自己的，不需要传userId
       });
       setOrders(res.data || []);
       setTotal(res.pagination?.total || res.total || 0);
@@ -81,19 +86,22 @@ export default function OrdersPage() {
 
   const columns = [
     { title: "订单号", dataIndex: "orderNo", width: 180, ellipsis: true },
-    {
+    ...(isAdmin ? [{
       title: "用户",
       dataIndex: ["user", "nickname"],
       width: 120,
-      render: (v: string, r: any) => v || r.user?.openid?.slice(-6) || "-",
-    },
+      render: (v: string, r: any) => {
+        const name = r.user?.realName || v || r.user?.openid?.slice(-6) || "-";
+        return name;
+      },
+    }] : []),
     {
       title: "金额",
       dataIndex: "totalAmount",
       width: 100,
       render: (v: number) => (
         <Text strong style={{ color: "#ff6b35" }}>
-          ¥{(v / 100).toFixed(2)}
+          ¥{Number(v).toFixed(2)}
         </Text>
       ),
     },
@@ -200,7 +208,7 @@ export default function OrdersPage() {
               </Descriptions.Item>
               <Descriptions.Item label="金额">
                 <Text strong style={{ color: "#ff6b35" }}>
-                  ¥{(detail.totalAmount / 100).toFixed(2)}
+                  ¥{Number(detail.totalAmount).toFixed(2)}
                 </Text>
               </Descriptions.Item>
               <Descriptions.Item label="用户">
@@ -230,21 +238,21 @@ export default function OrdersPage() {
                 {
                   title: "单价",
                   dataIndex: "price",
-                  render: (v: number) => `¥${(v / 100).toFixed(2)}`,
+                  render: (v: number) => `¥${Number(v).toFixed(2)}`,
                 },
                 { title: "数量", dataIndex: "quantity" },
                 {
                   title: "小计",
                   render: (_: any, r: any) => (
                     <Text strong>
-                      ¥{((r.price * r.quantity) / 100).toFixed(2)}
+                      ¥{Number(r.price * r.quantity).toFixed(2)}
                     </Text>
                   ),
                 },
               ]}
             />
 
-            {nextStatusMap[detail.status] && (
+            {isAdmin && nextStatusMap[detail.status] && (
               <>
                 <Divider />
                 <Row justify="center">

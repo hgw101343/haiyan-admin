@@ -20,6 +20,8 @@ body {
   color: #fff;
   background: #ff6b35;
   cursor: pointer;
+  gap: 0; /* 图片和文字紧挨 */
+  white-space: nowrap;
 }
 
 .logo-collapsed {

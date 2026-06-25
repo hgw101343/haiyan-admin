@@ -35,12 +35,16 @@ import {
   getCategories,
   uploadImage,
 } from "../../api";
+import { useAuthStore } from "../../store/auth";
 import type { UploadFile } from "antd";
 
 const { Title } = Typography;
 const { TextArea } = Input;
 
 export default function DishesPage() {
+  const { userInfo } = useAuthStore();
+  const isAdmin = userInfo?.role === "ADMIN";
+
   const [dishes, setDishes] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -49,6 +53,8 @@ export default function DishesPage() {
   const [keyword, setKeyword] = useState("");
   const [catFilter, setCatFilter] = useState<number | undefined>();
   const [recFilter, setRecFilter] = useState<boolean | undefined>();
+  // 归属人过滤：管理员默认undefined(全部)，普通用户默认自己
+  const [ownerFilter, setOwnerFilter] = useState<"mine" | "all">(isAdmin ? "all" : "mine");
   const [modalOpen, setModalOpen] = useState(false);
   const [editRecord, setEditRecord] = useState<any>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -65,6 +71,7 @@ export default function DishesPage() {
         keyword,
         categoryId: catFilter,
         recommended: recFilter,
+        createdBy: ownerFilter === "mine" ? userInfo?.id : undefined,
       });
       setDishes(res.data || []);
       setTotal(res.pagination?.total || res.total || 0);
@@ -85,7 +92,7 @@ export default function DishesPage() {
   useEffect(() => {
     fetchDishes(1);
     setPage(1);
-  }, [keyword, catFilter, recFilter]);
+  }, [keyword, catFilter, recFilter, ownerFilter]);
 
   const openCreate = () => {
     setEditRecord(null);
@@ -217,6 +224,12 @@ export default function DishesPage() {
       width: 100,
       render: (v: string) => (v ? <Tag color="orange">{v}</Tag> : "-"),
     },
+    ...(isAdmin ? [{
+      title: "归属人",
+      dataIndex: "createdBy",
+      width: 80,
+      render: (v: number) => v ? <Tag color="blue">用户{v}</Tag> : <Tag color="gold">管理员</Tag>,
+    }] : []),
     {
       title: "价格",
       dataIndex: "price",
@@ -321,6 +334,19 @@ export default function DishesPage() {
             ]}
           />
         </Col>
+        {isAdmin && (
+          <Col flex="140px">
+            <Select
+              value={ownerFilter}
+              style={{ width: "100%" }}
+              onChange={setOwnerFilter}
+              options={[
+                { value: "all", label: "全部菜品" },
+                { value: "mine", label: "我创建的" },
+              ]}
+            />
+          </Col>
+        )}
       </Row>
 
       <Table

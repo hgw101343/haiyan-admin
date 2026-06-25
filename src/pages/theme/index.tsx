@@ -22,6 +22,7 @@ import {
 } from '@ant-design/icons'
 import { getTheme, updateTheme, resetTheme, type ThemeConfig } from '../../api'
 import { useThemeStore } from '../../store/theme'
+import { useAuthStore } from '../../store/auth'
 import './index.css'
 
 const { Title, Text } = Typography
@@ -113,6 +114,9 @@ export default function ThemePage() {
   const [saving, setSaving] = useState(false)
   const [theme, setTheme] = useState<ThemeConfig | null>(null)
   const { setTheme: setStoreTheme, theme: storeTheme } = useThemeStore()
+  const { userInfo } = useAuthStore()
+
+  const isAdmin = userInfo?.role === 'ADMIN'
 
   useEffect(() => {
     fetchTheme()
@@ -121,7 +125,9 @@ export default function ThemePage() {
   const fetchTheme = async () => {
     setLoading(true)
     try {
-      const res = await getTheme()
+      // 管理员加载全局主题，普通用户加载个人主题（后端回退全局）
+      const params = isAdmin ? {} : { userId: userInfo?.id }
+      const res = await getTheme(params)
       setTheme(res.data)
     } catch {
       message.warning('获取主题配置失败，使用本地缓存')
@@ -183,7 +189,7 @@ export default function ThemePage() {
             主题设置
           </Title>
           <Text type="secondary" style={{ marginLeft: 32 }}>
-            修改后保存，小程序端刷新即可看到新主题
+            {isAdmin ? '管理员：修改全局主题，所有用户默认继承' : '个人主题：仅影响您自己的小程序显示'}
           </Text>
         </Col>
         <Col>

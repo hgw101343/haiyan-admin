@@ -14,32 +14,40 @@ import {
   Col,
   Switch,
   Tooltip,
+  Select,
+  Tag,
 } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { getCategories, createCategory, updateCategory, deleteCategory, batchDeleteCategories } from '../../api'
+import { useAuthStore } from '../../store/auth'
 
 const { Title } = Typography
 
 export default function CategoriesPage() {
+  const { userInfo } = useAuthStore()
+  const isAdmin = userInfo?.role === 'ADMIN'
+
   const [categories, setCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [editRecord, setEditRecord] = useState<any>(null)
   const [submitting, setSubmitting] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const [ownerFilter, setOwnerFilter] = useState<'mine' | 'all'>(isAdmin ? 'all' : 'mine')
   const [form] = Form.useForm()
 
   const fetch = async () => {
     setLoading(true)
     try {
-      const res: any = await getCategories()
+      const params = ownerFilter === 'mine' ? { createdBy: userInfo?.id } : {}
+      const res: any = await getCategories(params)
       setCategories(res.data || res)
     } finally {
       setLoading(false)
     }
   }
 
-  useEffect(() => { fetch() }, [])
+  useEffect(() => { fetch() }, [ownerFilter])
 
   const openCreate = () => {
     setEditRecord(null)
@@ -103,6 +111,12 @@ export default function CategoriesPage() {
     { title: 'ID', dataIndex: 'id', width: 80 },
     { title: '分类名称', dataIndex: 'name' },
     { title: '排序', dataIndex: 'sort', width: 100 },
+    ...(isAdmin ? [{
+      title: '归属人',
+      dataIndex: 'createdBy',
+      width: 90,
+      render: (v: number) => v ? <Tag color="blue">用户{v}</Tag> : <Tag color="gold">管理员</Tag>,
+    }] : []),
     {
       title: '推荐',
       dataIndex: 'isRecommended',
@@ -146,6 +160,17 @@ export default function CategoriesPage() {
         </Col>
         <Col>
           <Space>
+            {isAdmin && (
+              <Select
+                value={ownerFilter}
+                style={{ width: 140 }}
+                onChange={setOwnerFilter}
+                options={[
+                  { value: 'all', label: '全部分类' },
+                  { value: 'mine', label: '我创建的' },
+                ]}
+              />
+            )}
             {selectedRowKeys.length > 0 && (
               <Popconfirm
                 title={`确认删除选中的 ${selectedRowKeys.length} 个分类？（有菜品的分类无法删除）`}

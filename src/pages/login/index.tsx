@@ -45,9 +45,9 @@ export default function LoginPage() {
         bodyStyle={{ padding: '40px 40px 32px' }}
       >
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ fontSize: 48, marginBottom: 8 }}>🍜</div>
+          <img src="/logo.jpg" alt="海艳私厨" style={{ width: 64, height: 64, borderRadius: 14, marginBottom: 8 }} />
           <Title level={3} style={{ margin: 0 }}>
-            点餐系统
+            海艳私厨
           </Title>
           <Text type="secondary">后台管理系统</Text>
         </div>
