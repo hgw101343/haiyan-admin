@@ -45,14 +45,49 @@ const { Text } = Typography;
  * 菜单中只显示其有权访问的页面入口。
  */
 const allMenuItems = [
-  { key: "/dashboard", icon: <DashboardOutlined />, label: "仪表盘", adminOnly: true },
-  { key: "/dishes", icon: <ShoppingOutlined />, label: "菜品管理", adminOnly: false },
-  { key: "/categories", icon: <AppstoreOutlined />, label: "分类管理", adminOnly: false },
-  { key: "/orders", icon: <OrderedListOutlined />, label: "订单管理", adminOnly: false },
+  {
+    key: "/dashboard",
+    icon: <DashboardOutlined />,
+    label: "仪表盘",
+    adminOnly: true,
+  },
+  {
+    key: "/dishes",
+    icon: <ShoppingOutlined />,
+    label: "菜品管理",
+    adminOnly: false,
+  },
+  {
+    key: "/categories",
+    icon: <AppstoreOutlined />,
+    label: "分类管理",
+    adminOnly: false,
+  },
+  {
+    key: "/orders",
+    icon: <OrderedListOutlined />,
+    label: "订单管理",
+    adminOnly: false,
+  },
   { key: "/users", icon: <UserOutlined />, label: "用户管理", adminOnly: true },
-  { key: "/theme", icon: <BgColorsOutlined />, label: "主题设置", adminOnly: false },
-  { key: "/feedback", icon: <MessageOutlined />, label: "意见反馈", adminOnly: true },
-  { key: "/profile", icon: <SettingOutlined />, label: "个人中心", adminOnly: false },
+  {
+    key: "/theme",
+    icon: <BgColorsOutlined />,
+    label: "主题设置",
+    adminOnly: false,
+  },
+  {
+    key: "/feedback",
+    icon: <MessageOutlined />,
+    label: "意见反馈",
+    adminOnly: true,
+  },
+  {
+    key: "/profile",
+    icon: <SettingOutlined />,
+    label: "个人中心",
+    adminOnly: false,
+  },
 ];
 
 export default function Layout() {
@@ -77,7 +112,7 @@ export default function Layout() {
    * 因为 antd Menu 的 items 不需要该字段，避免控制台出现未知属性警告。
    */
   const menuItems = allMenuItems
-    .filter(item => userInfo?.role === "ADMIN" || !item.adminOnly)
+    .filter((item) => userInfo?.role === "ADMIN" || !item.adminOnly)
     .map(({ adminOnly: _a, ...item }) => item);
 
   /**
@@ -177,11 +212,25 @@ export default function Layout() {
           onClick={() => navigate("/dashboard")}
         >
           {collapsed ? (
-            <img src="/logo.jpg" alt="logo" style={{ width: 32, height: 32, borderRadius: 8 }} />
+            <img
+              src="/logo.jpg"
+              alt="logo"
+              style={{ width: 32, height: 32, borderRadius: 8 }}
+            />
           ) : (
             <>
-              <img src="/logo.jpg" alt="海艳私厨" style={{ width: 28, height: 28, borderRadius: 6, verticalAlign: 'middle', marginRight: 8 }} />
-              海艳私厨
+              <img
+                src="/logo.jpg"
+                alt="海宴私厨"
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  verticalAlign: "middle",
+                  marginRight: 8,
+                }}
+              />
+              海宴私厨
             </>
           )}
         </div>
@@ -240,7 +289,7 @@ export default function Layout() {
             <Button
               type="text"
               icon={<ReloadOutlined />}
-              onClick={() => setRefreshKey(k => k + 1)}
+              onClick={() => setRefreshKey((k) => k + 1)}
               style={{ fontSize: 16, width: 40, height: 40 }}
               title="刷新当前页"
             />
@@ -274,7 +323,7 @@ export default function Layout() {
         <Footer
           style={{ textAlign: "center", color: "#999", padding: "12px 50px" }}
         >
-          点餐系统后台 ©{new Date().getFullYear()} — Powered by React + Ant
+          海晏私厨后台 ©{new Date().getFullYear()} — Powered by React + Ant
           Design
         </Footer>
       </AntLayout>

@@ -54,7 +54,9 @@ export default function DishesPage() {
   const [catFilter, setCatFilter] = useState<number | undefined>();
   const [recFilter, setRecFilter] = useState<boolean | undefined>();
   // 归属人过滤：管理员默认undefined(全部)，普通用户默认自己
-  const [ownerFilter, setOwnerFilter] = useState<"mine" | "all">(isAdmin ? "all" : "mine");
+  const [ownerFilter, setOwnerFilter] = useState<"mine" | "all">(
+    isAdmin ? "all" : "mine",
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [editRecord, setEditRecord] = useState<any>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -72,6 +74,7 @@ export default function DishesPage() {
         categoryId: catFilter,
         recommended: recFilter,
         createdBy: ownerFilter === "mine" ? userInfo?.id : undefined,
+        sort: "newest",
       });
       setDishes(res.data || []);
       setTotal(res.pagination?.total || res.total || 0);
@@ -224,12 +227,21 @@ export default function DishesPage() {
       width: 100,
       render: (v: string) => (v ? <Tag color="orange">{v}</Tag> : "-"),
     },
-    ...(isAdmin ? [{
-      title: "归属人",
-      dataIndex: "createdBy",
-      width: 80,
-      render: (v: number) => v ? <Tag color="blue">用户{v}</Tag> : <Tag color="gold">管理员</Tag>,
-    }] : []),
+    ...(isAdmin
+      ? [
+          {
+            title: "归属人",
+            dataIndex: "createdBy",
+            width: 80,
+            render: (v: number) =>
+              v ? (
+                <Tag color="blue">用户{v}</Tag>
+              ) : (
+                <Tag color="gold">管理员</Tag>
+              ),
+          },
+        ]
+      : []),
     {
       title: "价格",
       dataIndex: "price",
